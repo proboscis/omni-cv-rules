@@ -1,0 +1,14 @@
+from omni_cv_rules.coconut.omni_converter import AutoList
+
+
+def intra_list_conversions(state,neighbors):
+    case state:
+        match AutoList(AutoList(_)):
+            return [] # dont dive into nested list too much
+        match AutoList(es):
+            return [((f,new_state,cost,name)->(
+                items -> [f(i) for i in items],
+                AutoList(new_state),
+                f"[{name}]",
+                cost+1
+            ))(f,new_state,cost,name) for f,new_state,cost,name in neighbors(es)]

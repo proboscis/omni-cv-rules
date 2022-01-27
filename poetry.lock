@@ -1,0 +1,114 @@
+[[package]]
+name = "coconut"
+version = "1.6.0"
+description = "Simple, elegant, Pythonic functional programming."
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+cPyparsing = {version = ">=2.4.7.1.0.0,<2.4.8", markers = "platform_python_implementation == \"CPython\""}
+prompt-toolkit = {version = ">=1", markers = "python_version >= \"3\""}
+pygments = {version = ">=2.3", markers = "python_version >= \"2.7\""}
+pyparsing = {version = ">=2.4.7,<2.4.8", markers = "platform_python_implementation != \"CPython\""}
+
+[package.extras]
+all = ["jupyter (>=1.0)", "types-backports (>=0.1)", "mypy[python2] (>=0.910,<0.911)", "jedi (>=0.17,<0.18)", "psutil (>=5)", "watchdog (>=0.10)", "ipykernel (>=4.10)", "ipython (>=5.4)", "jupyter-console (>=5.2)", "jupyter-client (>=5.3)", "pywinpty (>=0.5,<0.6)", "trollius (>=2.2)", "aenum (>=3)", "jupytext (>=1.8)", "jupyter-client (>=6.1.12,<6.1.13)", "ipykernel (>=5.5)", "ipython (>=7.9)", "jupyter-console (>=6.1)", "jupyterlab (>=2.2)", "dataclasses (>=0.8)"]
+backports = ["trollius (>=2.2)", "aenum (>=3)", "dataclasses (>=0.8)"]
+dev = ["jupyter (>=1.0)", "types-backports (>=0.1)", "mypy[python2] (>=0.910,<0.911)", "pexpect (>=4)", "vprof (>=0.36)", "pygments (>=2.3)", "pydata-sphinx-theme (>=0.7.1)", "pytest (>=3)", "requests (>=2.26)", "jedi (>=0.17,<0.18)", "myst-parser (>=0.15)", "psutil (>=5)", "sphinx (>=4.2)", "watchdog (>=0.10)", "ipykernel (>=4.10)", "ipython (>=5.4)", "jupyter-console (>=5.2)", "jupyter-client (>=5.3)", "pywinpty (>=0.5,<0.6)", "trollius (>=2.2)", "numpy (>=1)", "aenum (>=3)", "jupytext (>=1.8)", "pre-commit (>=2)", "jupyter-client (>=6.1.12,<6.1.13)", "ipykernel (>=5.5)", "ipython (>=7.9)", "jupyter-console (>=6.1)", "numpy (>=1)", "jupyterlab (>=2.2)", "dataclasses (>=0.8)"]
+docs = ["sphinx (>=4.2)", "myst-parser (>=0.15)", "pydata-sphinx-theme (>=0.7.1)", "pygments (>=2.3)"]
+ipython = ["jupyter (>=1.0)", "jedi (>=0.17,<0.18)", "jupyter-console (>=5.2)", "ipython (>=5.4)", "ipykernel (>=4.10)", "jupyter-client (>=5.3)", "pywinpty (>=0.5,<0.6)", "jupyter-console (>=6.1)", "ipython (>=7.9)", "ipykernel (>=5.5)", "jupytext (>=1.8)", "jupyter-client (>=6.1.12,<6.1.13)", "jupyterlab (>=2.2)"]
+jobs = ["psutil (>=5)"]
+jupyter = ["jupyter (>=1.0)", "jedi (>=0.17,<0.18)", "jupyter-console (>=5.2)", "ipython (>=5.4)", "ipykernel (>=4.10)", "jupyter-client (>=5.3)", "pywinpty (>=0.5,<0.6)", "jupyter-console (>=6.1)", "ipython (>=7.9)", "ipykernel (>=5.5)", "jupytext (>=1.8)", "jupyter-client (>=6.1.12,<6.1.13)", "jupyterlab (>=2.2)"]
+mypy = ["mypy[python2] (>=0.910,<0.911)", "types-backports (>=0.1)"]
+tests = ["jupyter (>=1.0)", "pexpect (>=4)", "pytest (>=3)", "jedi (>=0.17,<0.18)", "psutil (>=5)", "ipykernel (>=4.10)", "ipython (>=5.4)", "jupyter-console (>=5.2)", "jupyter-client (>=5.3)", "pywinpty (>=0.5,<0.6)", "trollius (>=2.2)", "numpy (>=1)", "aenum (>=3)", "jupytext (>=1.8)", "jupyter-client (>=6.1.12,<6.1.13)", "ipykernel (>=5.5)", "ipython (>=7.9)", "jupyter-console (>=6.1)", "numpy (>=1)", "jupyterlab (>=2.2)", "dataclasses (>=0.8)"]
+watch = ["watchdog (>=0.10)"]
+
+[[package]]
+name = "cpyparsing"
+version = "2.4.7.1.1.0"
+description = "Cython implementation of PyParsing for use in Coconut."
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "invoke"
+version = "1.6.0"
+description = "Pythonic task execution"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "prompt-toolkit"
+version = "3.0.26"
+description = "Library for building powerful interactive command lines in Python"
+category = "dev"
+optional = false
+python-versions = ">=3.6.2"
+
+[package.dependencies]
+wcwidth = "*"
+
+[[package]]
+name = "pygments"
+version = "2.11.2"
+description = "Pygments is a syntax highlighting package written in Python."
+category = "dev"
+optional = false
+python-versions = ">=3.5"
+
+[[package]]
+name = "pyparsing"
+version = "2.4.7"
+description = "Python parsing module"
+category = "dev"
+optional = false
+python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
+
+[[package]]
+name = "wcwidth"
+version = "0.2.5"
+description = "Measures the displayed width of unicode strings in a terminal"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[metadata]
+lock-version = "1.1"
+python-versions = "^3.7"
+content-hash = "f5c7c97c056cfa322ac81a3c82b35052d20bed13e13036f0cda49beeb9b40fe4"
+
+[metadata.files]
+coconut = [
+    {file = "coconut-1.6.0-py2.py3-none-any.whl", hash = "sha256:0e3f5bde863f93fec7dd383b59dae768fc0aee2c1db4e81264100506443617ab"},
+    {file = "coconut-1.6.0.tar.gz", hash = "sha256:1f8d3ba15a4335246dc5c2ae3693042b9ce02398455fea5fc6d1d9dcc242c69b"},
+]
+cpyparsing = [
+    {file = "cPyparsing-2.4.7.1.1.0-cp27-cp27m-win_amd64.whl", hash = "sha256:4940d4f97caceacea7cea7d53a7f759da6aa97c4aac8e51e842bef387ab49f3d"},
+    {file = "cPyparsing-2.4.7.1.1.0-cp38-cp38-win_amd64.whl", hash = "sha256:1065c107f17407ea8c255982975a6211ac777e7b42fb26d667abdee14e62c576"},
+    {file = "cPyparsing-2.4.7.1.1.0-cp39-cp39-win_amd64.whl", hash = "sha256:5aa509b5aa735b867ccd5cd131f71bf082d12c23f03bf53a8dfcf5bba39f67c1"},
+    {file = "cPyparsing-2.4.7.1.1.0.tar.gz", hash = "sha256:c533dcc81ef855e46a741e552a6f5a30b7aa7af417313cc8d4ea077034abdd77"},
+]
+invoke = [
+    {file = "invoke-1.6.0-py2-none-any.whl", hash = "sha256:e6c9917a1e3e73e7ea91fdf82d5f151ccfe85bf30cc65cdb892444c02dbb5f74"},
+    {file = "invoke-1.6.0-py3-none-any.whl", hash = "sha256:769e90caeb1bd07d484821732f931f1ad8916a38e3f3e618644687fc09cb6317"},
+    {file = "invoke-1.6.0.tar.gz", hash = "sha256:374d1e2ecf78981da94bfaf95366216aaec27c2d6a7b7d5818d92da55aa258d3"},
+]
+prompt-toolkit = [
+    {file = "prompt_toolkit-3.0.26-py3-none-any.whl", hash = "sha256:4bcf119be2200c17ed0d518872ef922f1de336eb6d1ddbd1e089ceb6447d97c6"},
+    {file = "prompt_toolkit-3.0.26.tar.gz", hash = "sha256:a51d41a6a45fd9def54365bca8f0402c8f182f2b6f7e29c74d55faeb9fb38ac4"},
+]
+pygments = [
+    {file = "Pygments-2.11.2-py3-none-any.whl", hash = "sha256:44238f1b60a76d78fc8ca0528ee429702aae011c265fe6a8dd8b63049ae41c65"},
+    {file = "Pygments-2.11.2.tar.gz", hash = "sha256:4e426f72023d88d03b2fa258de560726ce890ff3b630f88c21cbb8b2503b8c6a"},
+]
+pyparsing = [
+    {file = "pyparsing-2.4.7-py2.py3-none-any.whl", hash = "sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b"},
+    {file = "pyparsing-2.4.7.tar.gz", hash = "sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1"},
+]
+wcwidth = [
+    {file = "wcwidth-0.2.5-py2.py3-none-any.whl", hash = "sha256:beb4802a9cebb9144e99086eff703a642a13d6a0052920003a230f3294bbe784"},
+    {file = "wcwidth-0.2.5.tar.gz", hash = "sha256:c4d647b99872929fdb7bdcaa4fbe7f01413ed3d98077df798530e5b04f116c83"},
+]

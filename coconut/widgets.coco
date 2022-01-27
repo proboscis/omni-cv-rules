@@ -1,0 +1,17 @@
+from omni_cv_rules.coconut.omni_converter import AutoTuple
+from ipywidgets import widgets
+
+def any2widget(state):
+    return [(ary->Text(str(ary)),"widget","anything_to_text_widget",1000)]
+
+def auto_tuple2widget(state):
+    case state:
+        match AutoTuple(items) if all(i == "widget" for i in items):
+            return [
+                (
+                values-> widgets.VBox(values),
+                "widget",
+                "auto_tuple of widgets to a widget",
+                1
+                )
+            ]
