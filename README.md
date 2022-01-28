@@ -1,6 +1,8 @@
 # Omni-CV-Rules
-This module is a set of image related conversion rules for use with omni-converter.
+This module is a set of image related conversion rules for use with [omni-converter](https://github.com/proboscis/omni-converter).
 
+# Installation
+`pip instasll omni-cv-rules`
 
 # Quickstart
 ```python

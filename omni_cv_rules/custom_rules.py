@@ -5,7 +5,6 @@ import PIL
 from omni_converter.solver.rules import AutoRuleBook
 from toolz.functoolz import memoize
 
-from data_tree.dt_wandb.wandb_util import WandbSavedImage
 
 
 def make_rule(src, dst):
@@ -19,10 +18,6 @@ def make_rule(src, dst):
     return _inner
 
 
-@make_rule(WandbSavedImage, "image,RGB,RGB")
-@memoize
-def wandb_download_image(t: WandbSavedImage):
-    return t.download()
 
 
 @make_rule("image,RGB,RGB", "base64_png")
@@ -39,7 +34,7 @@ def base64_png_to_html(base64_str):
 
 
 @make_rule("dataframe", "html")
-def my_custom_dataframe_viz(df):
+def custom_dataframe_viz(df):
     def _formatter(item):
         if hasattr(item, "_repr_html_"):
             return item._repr_html_()
@@ -53,6 +48,5 @@ def my_custom_dataframe_viz(df):
 custom_rule_book = AutoRuleBook().add_rules(
     pil_img_to_base64,
     base64_png_to_html,
-    wandb_download_image,
-    my_custom_dataframe_viz
+    custom_dataframe_viz
 ).add_alias("html", "_repr_html_")
