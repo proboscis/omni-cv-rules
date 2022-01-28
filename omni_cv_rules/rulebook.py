@@ -12,11 +12,11 @@ from omni_cv_rules.coconut.widgets import any2widget, auto_tuple2widget
 from omni_cv_rules.custom_rules import custom_rule_book
 
 
-def create_cast_rule(rule, name=None, _swap=False, cost=1):
+def create_cast_rule(rule, name=None, cost=1):
     """
     rule: State->List[State] # should return list of possible casts without data conversion.
     """
-    return CastLambda(rule, name, _swap, cost=cost)
+    return CastLambda(rule, name, cost=cost)
 
 
 def create_conversion_rule(rule):
@@ -33,7 +33,7 @@ def create_alias_rule(a, b):
     return create_cast_rule(caster, f"alias:{a}=={b}")
 
 
-non_recursive_rules = AutoRuleBook().add_rules(
+CV_RULEBOOK = AutoRuleBook().add_rules(
     imdef_neighbors,
     rule_xyz_to_rgb,
     rule_batch_xyz_to_rgb,
@@ -73,8 +73,6 @@ non_recursive_rules = AutoRuleBook().add_rules(
     create_conversion_rule(auto_tuple2widget),
     create_alias_rule("numpy_rgb", "numpy,uint8,HWC,RGB,0_255"),
     create_alias_rule("numpy_rgba", "numpy,uint8,HWC,RGBA,0_255"),
-) + custom_rule_book
-
-recursive_rules = [
-    create_conversion_rule(intra_list_conversions)
-]
+) + custom_rule_book.add_recursive_rule(
+    intra_list_conversions
+)

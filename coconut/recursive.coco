@@ -11,4 +11,4 @@ def intra_list_conversions(state,neighbors):
                 AutoList(new_state),
                 f"[{name}]",
                 cost+1
-            ))(f,new_state,cost,name) for f,new_state,cost,name in neighbors(es)]
+            ))(re.converter,re.new_format,re.cost,re.name) for re in neighbors(es)]

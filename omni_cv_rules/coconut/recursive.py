@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x61a968e6
+# __coconut_hash__ = 0x4bbe2f00
 
 # Compiled with Coconut version 1.6.0 [Vocational Guidance Counsellor]
 
@@ -52,4 +52,4 @@ def intra_list_conversions(state, neighbors):  # def intra_list_conversions(stat
             if _coconut_match_set_name_es is not _coconut_sentinel:  #         match AutoList(es):
                 es = _coconut_case_match_to_0[0]  #         match AutoList(es):
         if _coconut_case_match_check_0:  #         match AutoList(es):
-            return ([(lambda f, new_state, cost, name: (lambda items: [f(i) for i in items], AutoList(new_state), "[{_coconut_format_0}]".format(_coconut_format_0=(name)), cost + 1))(f, new_state, cost, name) for f, new_state, cost, name in neighbors(es)])  #             return [((f,new_state,cost,name)->(
+            return ([(lambda f, new_state, cost, name: (lambda items: [f(i) for i in items], AutoList(new_state), "[{_coconut_format_0}]".format(_coconut_format_0=(name)), cost + 1))(re.converter, re.new_format, re.cost, re.name) for re in neighbors(es)])  #             return [((f,new_state,cost,name)->(
