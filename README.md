@@ -7,7 +7,9 @@ This module is a set of image related conversion rules for use with [omni-conver
 # Quickstart
 ```python
 from omni_converter import AutoDataFactory
-from omni_cv_rules import CV_RULEBOOK
+from omni_cv_rules.rulebook import CV_RULEBOOK
+import numpy as np
+import torch
 auto = AutoDataFactory(CV_RULEBOOK)
 # loading an image
 img:"IAutoData" = auto("image_path","path/to/image")

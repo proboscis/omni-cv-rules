@@ -8,7 +8,7 @@ from typing import Mapping
 from loguru import logger
 import numpy as np
 from omni_cv_rules.coconut.visualization import infer_widget
-
+from omni_cv_rules.place_holder.torch_proxy import torch
 def imagedef2dict(imdef:ImageDef):
     case imdef:
         match ImageDef(data_type,meta):
@@ -29,6 +29,7 @@ def imagedef2dict(imdef:ImageDef):
             )
     else:
         raise RuntimeError(f"cannot convert unknown imdef:{imdef} to dict.")
+
 
 def cast_imdef_to_dict(state):
     if isinstance(state,ImageDef):
@@ -422,7 +423,6 @@ def pix2pix_normalizer(nc):
 
 
 def torch_img_to_pixpix_input(state):
-    import torch
     case state:
         match {"type":"torch","dtype":"float32","arrange":"CHW","v_range":"0_1","ch_rpr":("RGB" or "RGBA" or "L") as rpr,**kwargs}:
             return [(
@@ -568,9 +568,23 @@ def repeat_ch(state):
                        arrange="HWC",
                        ch_rpr=ch*3,
                        v_range="0_255",
-                       meta=fdict({"shape":(shape[0],shape[1],3),**other})
+                       meta=fdict({"shape":(shape[0],shape[1],3),**other}),
+                       **kwargs
                        ),
                 "repeat_channel_3",
+                10)
+            ]
+        match {"type":"numpy","arrange":"HWC","ch_rpr":ch,"meta":{"shape":shape,**other},**kwargs} if len(ch_splitter(ch)) == 1:
+            return [
+                (a->a[:,:,[0,0,0]],
+                fdict(
+                    type="numpy",
+                    arrange="HWC",
+                    ch_rpr=ch*3,
+                    meta=fdict({"shape":(shape[0],shape[1],3),**other}),
+                    **kwargs
+                ),
+                "numpy_repeat_channel_3",
                 10)
             ]
 

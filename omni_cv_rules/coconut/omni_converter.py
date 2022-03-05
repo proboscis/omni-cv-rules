@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xbe9df62b
+# __coconut_hash__ = 0xd82d6f65
 
 # Compiled with Coconut version 1.6.0 [Vocational Guidance Counsellor]
 
@@ -43,7 +43,7 @@ from typing import Mapping  # from typing import Mapping
 from loguru import logger  # from loguru import logger
 import numpy as np  # import numpy as np
 from omni_cv_rules.coconut.visualization import infer_widget  # from omni_cv_rules.coconut.visualization import infer_widget
-
+from omni_cv_rules.place_holder.torch_proxy import torch  # from omni_cv_rules.place_holder.torch_proxy import torch
 def imagedef2dict(imdef: 'ImageDef'):  # def imagedef2dict(imdef:ImageDef):
     _coconut_case_match_to_1 = imdef  #     case imdef:
     _coconut_case_match_check_1 = False  #     case imdef:
@@ -137,6 +137,7 @@ def imagedef2dict(imdef: 'ImageDef'):  # def imagedef2dict(imdef:ImageDef):
         return (frozendict(meta=meta, **info))  #             return frozendict(
     if not _coconut_case_match_check_1:  #     else:
         raise RuntimeError("cannot convert unknown imdef:{_coconut_format_0} to dict.".format(_coconut_format_0=(imdef)))  #         raise RuntimeError(f"cannot convert unknown imdef:{imdef} to dict.")
+
 
 def cast_imdef_to_dict(state):  # def cast_imdef_to_dict(state):
     if isinstance(state, ImageDef):  #     if isinstance(state,ImageDef):
@@ -351,6 +352,7 @@ def rule_imgs2tile(state):  # def rule_imgs2tile(state):
     if _coconut_case_match_check_6:  #     case state:
         return ([(imgs2tile, ImageDef(Numpy("uint8", "HWC", chrpr, VR_0_255), (ms_imgs2tile)(meta)), "imgs2tile", 10), ])  #             return [(
 
+# todo
 def batch_to_tiled(ary, max_size=1024, padding=1):  # def batch_to_tiled(ary,max_size=1024,padding=1):
 # ary shape == (B,H,W,C)
     w = ary.shape[2]  #     w = ary.shape[2]
@@ -998,7 +1000,6 @@ def pix2pix_normalizer(nc):  # def pix2pix_normalizer(nc):
 
 
 def torch_img_to_pixpix_input(state):  # def torch_img_to_pixpix_input(state):
-    import torch  #     import torch
     _coconut_case_match_to_19 = state  #     case state:
     _coconut_case_match_check_19 = False  #     case state:
     _coconut_match_set_name_rpr = _coconut_sentinel  #     case state:
@@ -1229,7 +1230,32 @@ def repeat_ch(state):  # def repeat_ch(state):
     if _coconut_case_match_check_21 and not (len(ch_splitter(ch)) == 1):  #     case state:
         _coconut_case_match_check_21 = False  #     case state:
     if _coconut_case_match_check_21:  #     case state:
-        return ([(lambda a: np.repeat(np.array(a)[:, :, None], 3, axis=2), fdict(type="numpy", dtype="uint8", arrange="HWC", ch_rpr=ch * 3, v_range="0_255", meta=fdict({"shape": (shape[0], shape[1], 3), **other})), "repeat_channel_3", 10), ])  #             return [
+        return ([(lambda a: np.repeat(np.array(a)[:, :, None], 3, axis=2), fdict(type="numpy", dtype="uint8", arrange="HWC", ch_rpr=ch * 3, v_range="0_255", meta=fdict({"shape": (shape[0], shape[1], 3), **other}), **kwargs), "repeat_channel_3", 10), ])  #             return [
+    if not _coconut_case_match_check_21:  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+        _coconut_match_set_name_ch = _coconut_sentinel  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+        _coconut_match_set_name_shape = _coconut_sentinel  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+        if _coconut.isinstance(_coconut_case_match_to_21, _coconut.abc.Mapping):  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+            _coconut_match_temp_0 = _coconut_case_match_to_21.get("type", _coconut_sentinel)  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+            _coconut_match_temp_1 = _coconut_case_match_to_21.get("arrange", _coconut_sentinel)  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+            _coconut_match_temp_2 = _coconut_case_match_to_21.get("ch_rpr", _coconut_sentinel)  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+            _coconut_match_temp_3 = _coconut_case_match_to_21.get("meta", _coconut_sentinel)  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+            if (_coconut_match_temp_0 is not _coconut_sentinel) and (_coconut_match_temp_0 == "numpy") and (_coconut_match_temp_1 is not _coconut_sentinel) and (_coconut_match_temp_1 == "HWC") and (_coconut_match_temp_2 is not _coconut_sentinel) and (_coconut_match_temp_3 is not _coconut_sentinel) and (_coconut.isinstance(_coconut_match_temp_3, _coconut.abc.Mapping)):  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+                _coconut_match_set_name_ch = _coconut_match_temp_2  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+                _coconut_match_temp_4 = _coconut_match_temp_3.get("shape", _coconut_sentinel)  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+                kwargs = dict((k, v) for k, v in _coconut_case_match_to_21.items() if k not in set(("type", "arrange", "ch_rpr", "meta")))  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+                if _coconut_match_temp_4 is not _coconut_sentinel:  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+                    _coconut_match_set_name_shape = _coconut_match_temp_4  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+                    other = dict((k, v) for k, v in _coconut_match_temp_3.items() if k not in set(("shape",)))  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+                    _coconut_case_match_check_21 = True  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+        if _coconut_case_match_check_21:  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+            if _coconut_match_set_name_ch is not _coconut_sentinel:  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+                ch = _coconut_match_temp_2  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+            if _coconut_match_set_name_shape is not _coconut_sentinel:  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+                shape = _coconut_match_temp_4  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+        if _coconut_case_match_check_21 and not (len(ch_splitter(ch)) == 1):  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+            _coconut_case_match_check_21 = False  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+        if _coconut_case_match_check_21:  #                 (a->np.repeat(np.array(a)[:,:,None],3,axis=2),
+            return ([(lambda a: a[:, :, [0, 0, 0]], fdict(type="numpy", arrange="HWC", ch_rpr=ch * 3, meta=fdict({"shape": (shape[0], shape[1], 3), **other}), **kwargs), "numpy_repeat_channel_3", 10), ])  #             return [
 
 
 

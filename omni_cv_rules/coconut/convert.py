@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0xe9ca8654
+# __coconut_hash__ = 0x93754d2e
 
 # Compiled with Coconut version 1.6.0 [Vocational Guidance Counsellor]
 
@@ -36,17 +36,17 @@ _coconut_sys.path.pop(0)
 import numpy as np  # import numpy as np
 from loguru import logger  # from loguru import logger
 from PIL import Image  # from PIL import Image
-import torch  # import torch
 import re  # import re
 from frozendict import frozendict as fdict  # from frozendict import frozendict as fdict
 from frozendict import frozendict  # from frozendict import frozendict
-
+from omni_cv_rules.py_38.torch_rules import ycbcr_to_rgb  # from omni_cv_rules.py_38.torch_rules import ycbcr_to_rgb,rgb_to_ycbcr
+from omni_cv_rules.py_38.torch_rules import rgb_to_ycbcr  # from omni_cv_rules.py_38.torch_rules import ycbcr_to_rgb,rgb_to_ycbcr
+from omni_cv_rules.place_holder.torch_proxy import torch  # from omni_cv_rules.place_holder.torch_proxy import torch
 VR_0_1 = "0_1"  # VR_0_1 = "0_1"
 VR_0_255 = "0_255"  # VR_0_255 = "0_255"
 VR_None = "None"  # VR_None = "None"
 VR_XYZ_Normalized = "XYZ_Normalized"  # VR_XYZ_Normalized = "XYZ_Normalized"
 ch_splitter = re.compile("[A-Z][a-z]*").findall  # ch_splitter = re.compile("[A-Z][a-z]*").findall
-
 class DataType(_coconut.collections.namedtuple("DataType", ())):  # data DataType
     __slots__ = ()  # data DataType
     __ne__ = _coconut.object.__ne__  # data DataType
@@ -294,6 +294,7 @@ class DataEdge(_coconut.collections.namedtuple("DataEdge", ('a', 'b', 'f', 'cost
                         logger.info("{_coconut_format_0}:\n{_coconut_format_1}->{_coconut_format_2}".format(_coconut_format_0=(self.name), _coconut_format_1=(src.meta['shape']), _coconut_format_2=(new_meta['shape'])))  #                         logger.info(f"{self.name}:\n{src.meta['shape']}->{new_meta['shape']}")
         except Exception as e:  #         except Exception as e:
             from IPython import embed  #             from IPython import embed
+            logger.error("error while converting to edge!".format())  #             logger.error(f"error while converting to edge!")
             embed()  #             embed()
             raise e  #             raise e
 _coconut_call_set_names(DataEdge)  # data Edge(a is ImageDef,b is ImageDef,f,cost is int,name="undefined"):
@@ -365,6 +366,34 @@ def to_imagedef(f):  # def to_imagedef(f):
             logger.warning("{_coconut_format_0}".format(_coconut_format_0=(hasattr(imdef, 'data_type'))))  #             logger.warning(f"{hasattr(imdef,'data_type')}")
             raise e  #             raise e
     return (_inner)  #     return _inner
+@to_imagedef  # @to_imagedef
+def to_torch(imdef):  # def to_torch(imdef):
+
+    _coconut_case_match_to_1 = imdef  #     case imdef:
+    _coconut_case_match_check_1 = False  #     case imdef:
+    _coconut_match_set_name_dtype = _coconut_sentinel  #     case imdef:
+    _coconut_match_set_name_arng = _coconut_sentinel  #     case imdef:
+    _coconut_match_set_name_ch_repr = _coconut_sentinel  #     case imdef:
+    _coconut_match_set_name_vr = _coconut_sentinel  #     case imdef:
+    if (_coconut.isinstance(_coconut_case_match_to_1, Numpy)) and (_coconut.len(_coconut_case_match_to_1) == 4):  #     case imdef:
+        _coconut_match_set_name_dtype = _coconut_case_match_to_1[0]  #     case imdef:
+        _coconut_match_set_name_arng = _coconut_case_match_to_1[1]  #     case imdef:
+        _coconut_match_set_name_ch_repr = _coconut_case_match_to_1[2]  #     case imdef:
+        _coconut_match_set_name_vr = _coconut_case_match_to_1[3]  #     case imdef:
+        _coconut_case_match_check_1 = True  #     case imdef:
+    if _coconut_case_match_check_1:  #     case imdef:
+        if _coconut_match_set_name_dtype is not _coconut_sentinel:  #     case imdef:
+            dtype = _coconut_case_match_to_1[0]  #     case imdef:
+        if _coconut_match_set_name_arng is not _coconut_sentinel:  #     case imdef:
+            arng = _coconut_case_match_to_1[1]  #     case imdef:
+        if _coconut_match_set_name_ch_repr is not _coconut_sentinel:  #     case imdef:
+            ch_repr = _coconut_case_match_to_1[2]  #     case imdef:
+        if _coconut_match_set_name_vr is not _coconut_sentinel:  #     case imdef:
+            vr = _coconut_case_match_to_1[3]  #     case imdef:
+    if _coconut_case_match_check_1:  #     case imdef:
+        return ([DataEdge(imdef, Torch(dtype, arng, ch_repr, vr), torch.from_numpy, 2, name="to_torch"), ])  #             return [DataEdge(imdef,Torch(dtype,arng,ch_repr,vr),torch.from_numpy,2,name="to_torch")]
+    return ([])  #     return []
+
 
 # there are kinds of rules
 # 1. doesnt care about shape, and no shape change
@@ -380,131 +409,49 @@ def to_imagedef(f):  # def to_imagedef(f):
 
 @to_imagedef  # doesn't change shape, so no touch  # @to_imagedef # doesn't change shape, so no touch
 def to_PILImages(imdef: 'ImageDef') -> '_coconut.typing.Sequence[Edge]':  # def to_PILImages(imdef:ImageDef)->Edge[]:
-    _coconut_case_match_to_1 = imdef  #     case imdef:
-    _coconut_case_match_check_1 = False  #     case imdef:
+    _coconut_case_match_to_2 = imdef  #     case imdef:
+    _coconut_case_match_check_2 = False  #     case imdef:
     _coconut_match_set_name_c_repr = _coconut_sentinel  #     case imdef:
-    if (_coconut.isinstance(_coconut_case_match_to_1, Numpy)) and (_coconut.len(_coconut_case_match_to_1) == 4) and (_coconut_case_match_to_1[0] == "uint8") and (_coconut_case_match_to_1[1] == "BHWC") and (_coconut_case_match_to_1[3] == VR_0_255):  #     case imdef:
-        _coconut_match_set_name_c_repr = _coconut_case_match_to_1[2]  #     case imdef:
-        _coconut_case_match_check_1 = True  #     case imdef:
-    if _coconut_case_match_check_1:  #     case imdef:
+    if (_coconut.isinstance(_coconut_case_match_to_2, Numpy)) and (_coconut.len(_coconut_case_match_to_2) == 4) and (_coconut_case_match_to_2[0] == "uint8") and (_coconut_case_match_to_2[1] == "BHWC") and (_coconut_case_match_to_2[3] == VR_0_255):  #     case imdef:
+        _coconut_match_set_name_c_repr = _coconut_case_match_to_2[2]  #     case imdef:
+        _coconut_case_match_check_2 = True  #     case imdef:
+    if _coconut_case_match_check_2:  #     case imdef:
         if _coconut_match_set_name_c_repr is not _coconut_sentinel:  #     case imdef:
-            c_repr = _coconut_case_match_to_1[2]  #     case imdef:
-    if _coconut_case_match_check_1 and not (len(ch_splitter(c_repr)) in (3, 4)):  #     case imdef:
-        _coconut_case_match_check_1 = False  #     case imdef:
-    if _coconut_case_match_check_1:  #     case imdef:
+            c_repr = _coconut_case_match_to_2[2]  #     case imdef:
+    if _coconut_case_match_check_2 and not (len(ch_splitter(c_repr)) in (3, 4)):  #     case imdef:
+        _coconut_case_match_check_2 = False  #     case imdef:
+    if _coconut_case_match_check_2:  #     case imdef:
         return ([DataEdge(imdef, PILImages(c_repr, c_repr), lambda ary: [(Image.fromarray)(img) for img in ary], 2, name="numpy batch {_coconut_format_0} to Images".format(_coconut_format_0=(c_repr))), ])  #             return [DataEdge(imdef,PILImages(c_repr,c_repr),ary -> [(Image.fromarray)(img) for img in ary],2,name=f"numpy batch {c_repr} to Images")]
-    if not _coconut_case_match_check_1:  #         match Numpy("uint8","BHW",c_repr,=VR_0_255):
+    if not _coconut_case_match_check_2:  #         match Numpy("uint8","BHW",c_repr,=VR_0_255):
         _coconut_match_set_name_c_repr = _coconut_sentinel  #         match Numpy("uint8","BHW",c_repr,=VR_0_255):
-        if (_coconut.isinstance(_coconut_case_match_to_1, Numpy)) and (_coconut.len(_coconut_case_match_to_1) == 4) and (_coconut_case_match_to_1[0] == "uint8") and (_coconut_case_match_to_1[1] == "BHW") and (_coconut_case_match_to_1[3] == VR_0_255):  #         match Numpy("uint8","BHW",c_repr,=VR_0_255):
-            _coconut_match_set_name_c_repr = _coconut_case_match_to_1[2]  #         match Numpy("uint8","BHW",c_repr,=VR_0_255):
-            _coconut_case_match_check_1 = True  #         match Numpy("uint8","BHW",c_repr,=VR_0_255):
-        if _coconut_case_match_check_1:  #         match Numpy("uint8","BHW",c_repr,=VR_0_255):
+        if (_coconut.isinstance(_coconut_case_match_to_2, Numpy)) and (_coconut.len(_coconut_case_match_to_2) == 4) and (_coconut_case_match_to_2[0] == "uint8") and (_coconut_case_match_to_2[1] == "BHW") and (_coconut_case_match_to_2[3] == VR_0_255):  #         match Numpy("uint8","BHW",c_repr,=VR_0_255):
+            _coconut_match_set_name_c_repr = _coconut_case_match_to_2[2]  #         match Numpy("uint8","BHW",c_repr,=VR_0_255):
+            _coconut_case_match_check_2 = True  #         match Numpy("uint8","BHW",c_repr,=VR_0_255):
+        if _coconut_case_match_check_2:  #         match Numpy("uint8","BHW",c_repr,=VR_0_255):
             if _coconut_match_set_name_c_repr is not _coconut_sentinel:  #         match Numpy("uint8","BHW",c_repr,=VR_0_255):
-                c_repr = _coconut_case_match_to_1[2]  #         match Numpy("uint8","BHW",c_repr,=VR_0_255):
-        if _coconut_case_match_check_1:  #         match Numpy("uint8","BHW",c_repr,=VR_0_255):
+                c_repr = _coconut_case_match_to_2[2]  #         match Numpy("uint8","BHW",c_repr,=VR_0_255):
+        if _coconut_case_match_check_2:  #         match Numpy("uint8","BHW",c_repr,=VR_0_255):
             return ([DataEdge(imdef, PILImages("L", c_repr), lambda ary: [(_coconut_base_compose(Image.fromarray, (_coconut.operator.methodcaller("convert", "L"), 0)))(img) for img in ary], 2, name="numpy batch to images"), ])  #             return [DataEdge(imdef,PILImages("L",c_repr),ary -> [(Image.fromarray ..> .convert("L"))(img) for img in ary],2,name="numpy batch to images")]
-    if not _coconut_case_match_check_1:  #         match Numpy("uint8","HW",c_repr,=VR_0_255):
+    if not _coconut_case_match_check_2:  #         match Numpy("uint8","HW",c_repr,=VR_0_255):
         _coconut_match_set_name_c_repr = _coconut_sentinel  #         match Numpy("uint8","HW",c_repr,=VR_0_255):
-        if (_coconut.isinstance(_coconut_case_match_to_1, Numpy)) and (_coconut.len(_coconut_case_match_to_1) == 4) and (_coconut_case_match_to_1[0] == "uint8") and (_coconut_case_match_to_1[1] == "HW") and (_coconut_case_match_to_1[3] == VR_0_255):  #         match Numpy("uint8","HW",c_repr,=VR_0_255):
-            _coconut_match_set_name_c_repr = _coconut_case_match_to_1[2]  #         match Numpy("uint8","HW",c_repr,=VR_0_255):
-            _coconut_case_match_check_1 = True  #         match Numpy("uint8","HW",c_repr,=VR_0_255):
-        if _coconut_case_match_check_1:  #         match Numpy("uint8","HW",c_repr,=VR_0_255):
+        if (_coconut.isinstance(_coconut_case_match_to_2, Numpy)) and (_coconut.len(_coconut_case_match_to_2) == 4) and (_coconut_case_match_to_2[0] == "uint8") and (_coconut_case_match_to_2[1] == "HW") and (_coconut_case_match_to_2[3] == VR_0_255):  #         match Numpy("uint8","HW",c_repr,=VR_0_255):
+            _coconut_match_set_name_c_repr = _coconut_case_match_to_2[2]  #         match Numpy("uint8","HW",c_repr,=VR_0_255):
+            _coconut_case_match_check_2 = True  #         match Numpy("uint8","HW",c_repr,=VR_0_255):
+        if _coconut_case_match_check_2:  #         match Numpy("uint8","HW",c_repr,=VR_0_255):
             if _coconut_match_set_name_c_repr is not _coconut_sentinel:  #         match Numpy("uint8","HW",c_repr,=VR_0_255):
-                c_repr = _coconut_case_match_to_1[2]  #         match Numpy("uint8","HW",c_repr,=VR_0_255):
-        if _coconut_case_match_check_1:  #         match Numpy("uint8","HW",c_repr,=VR_0_255):
+                c_repr = _coconut_case_match_to_2[2]  #         match Numpy("uint8","HW",c_repr,=VR_0_255):
+        if _coconut_case_match_check_2:  #         match Numpy("uint8","HW",c_repr,=VR_0_255):
             return ([DataEdge(imdef, PILImage("L", c_repr), _coconut_base_compose(Image.fromarray, (_coconut.operator.methodcaller("convert", "L"), 0)), 2, name="numpy HW to PIL Image"), ])  #             return [DataEdge(imdef,PILImage("L",c_repr), Image.fromarray ..> .convert("L"),2,name="numpy HW to PIL Image")]
     return ([])  #     return []
 @to_imagedef  # @to_imagedef
 def to_numpy(imdef: 'ImageDef') -> 'List[DataEdge]':  # def to_numpy(imdef:ImageDef)->List[DataEdge]:
-    _coconut_case_match_to_2 = imdef  #     case imdef:
-    _coconut_case_match_check_2 = False  #     case imdef:
-    _coconut_match_set_name_dtype = _coconut_sentinel  #     case imdef:
-    _coconut_match_set_name_arng = _coconut_sentinel  #     case imdef:
-    _coconut_match_set_name_ch_repr = _coconut_sentinel  #     case imdef:
-    _coconut_match_set_name_vr = _coconut_sentinel  #     case imdef:
-    if (_coconut.isinstance(_coconut_case_match_to_2, Torch)) and (_coconut.len(_coconut_case_match_to_2) == 4):  #     case imdef:
-        _coconut_match_set_name_dtype = _coconut_case_match_to_2[0]  #     case imdef:
-        _coconut_match_set_name_arng = _coconut_case_match_to_2[1]  #     case imdef:
-        _coconut_match_set_name_ch_repr = _coconut_case_match_to_2[2]  #     case imdef:
-        _coconut_match_set_name_vr = _coconut_case_match_to_2[3]  #     case imdef:
-        _coconut_case_match_check_2 = True  #     case imdef:
-    if _coconut_case_match_check_2:  #     case imdef:
-        if _coconut_match_set_name_dtype is not _coconut_sentinel:  #     case imdef:
-            dtype = _coconut_case_match_to_2[0]  #     case imdef:
-        if _coconut_match_set_name_arng is not _coconut_sentinel:  #     case imdef:
-            arng = _coconut_case_match_to_2[1]  #     case imdef:
-        if _coconut_match_set_name_ch_repr is not _coconut_sentinel:  #     case imdef:
-            ch_repr = _coconut_case_match_to_2[2]  #     case imdef:
-        if _coconut_match_set_name_vr is not _coconut_sentinel:  #     case imdef:
-            vr = _coconut_case_match_to_2[3]  #     case imdef:
-    if _coconut_case_match_check_2:  #     case imdef:
-        return ([DataEdge(imdef, Numpy(dtype, arng, ch_repr, vr), (_coconut_base_compose(_coconut.operator.methodcaller("detach"), (_coconut.operator.methodcaller("cpu"), 0), (_coconut.operator.methodcaller("numpy"), 0))), 1, name="torch_to_numpy"), ])  #             return [DataEdge(imdef,
-    if not _coconut_case_match_check_2:  #                          Numpy(dtype  ,arng ,ch_repr,vr),
-        _coconut_match_set_name_ch_repr = _coconut_sentinel  #                          Numpy(dtype  ,arng ,ch_repr,vr),
-        if (_coconut.isinstance(_coconut_case_match_to_2, PILImage)) and (_coconut.len(_coconut_case_match_to_2) == 2) and (_coconut_case_match_to_2[0] == "RGB"):  #                          Numpy(dtype  ,arng ,ch_repr,vr),
-            _coconut_match_set_name_ch_repr = _coconut_case_match_to_2[1]  #                          Numpy(dtype  ,arng ,ch_repr,vr),
-            _coconut_case_match_check_2 = True  #                          Numpy(dtype  ,arng ,ch_repr,vr),
-        if _coconut_case_match_check_2:  #                          Numpy(dtype  ,arng ,ch_repr,vr),
-            if _coconut_match_set_name_ch_repr is not _coconut_sentinel:  #                          Numpy(dtype  ,arng ,ch_repr,vr),
-                ch_repr = _coconut_case_match_to_2[1]  #                          Numpy(dtype  ,arng ,ch_repr,vr),
-        if _coconut_case_match_check_2:  #                          Numpy(dtype  ,arng ,ch_repr,vr),
-            return ([DataEdge(imdef, Numpy("uint8", "HWC", ch_repr, VR_0_255), np.array, 1, name="image_to_numpy"), ])  #                     return [DataEdge(imdef,
-    if not _coconut_case_match_check_2:  #                                 Numpy("uint8","HWC",ch_repr,VR_0_255),
-        _coconut_match_set_name_ch_repr = _coconut_sentinel  #                                 Numpy("uint8","HWC",ch_repr,VR_0_255),
-        if (_coconut.isinstance(_coconut_case_match_to_2, PILImage)) and (_coconut.len(_coconut_case_match_to_2) == 2) and (_coconut_case_match_to_2[0] == "L"):  #                                 Numpy("uint8","HWC",ch_repr,VR_0_255),
-            _coconut_match_set_name_ch_repr = _coconut_case_match_to_2[1]  #                                 Numpy("uint8","HWC",ch_repr,VR_0_255),
-            _coconut_case_match_check_2 = True  #                                 Numpy("uint8","HWC",ch_repr,VR_0_255),
-        if _coconut_case_match_check_2:  #                                 Numpy("uint8","HWC",ch_repr,VR_0_255),
-            if _coconut_match_set_name_ch_repr is not _coconut_sentinel:  #                                 Numpy("uint8","HWC",ch_repr,VR_0_255),
-                ch_repr = _coconut_case_match_to_2[1]  #                                 Numpy("uint8","HWC",ch_repr,VR_0_255),
-        if _coconut_case_match_check_2:  #                                 Numpy("uint8","HWC",ch_repr,VR_0_255),
-            return ([DataEdge(imdef, Numpy("uint8", "HW", ch_repr, VR_0_255), np.array, 1, name="image_to_numpy"), ])  #                     return [DataEdge(imdef,
-    if not _coconut_case_match_check_2:  #                                 Numpy("uint8","HW",ch_repr,VR_0_255),
-        _coconut_match_set_name_ch_repr = _coconut_sentinel  #                                 Numpy("uint8","HW",ch_repr,VR_0_255),
-        if (_coconut.isinstance(_coconut_case_match_to_2, PILImage)) and (_coconut.len(_coconut_case_match_to_2) == 2) and (_coconut_case_match_to_2[0] == "YCbCr"):  #                                 Numpy("uint8","HW",ch_repr,VR_0_255),
-            _coconut_match_set_name_ch_repr = _coconut_case_match_to_2[1]  #                                 Numpy("uint8","HW",ch_repr,VR_0_255),
-            _coconut_case_match_check_2 = True  #                                 Numpy("uint8","HW",ch_repr,VR_0_255),
-        if _coconut_case_match_check_2:  #                                 Numpy("uint8","HW",ch_repr,VR_0_255),
-            if _coconut_match_set_name_ch_repr is not _coconut_sentinel:  #                                 Numpy("uint8","HW",ch_repr,VR_0_255),
-                ch_repr = _coconut_case_match_to_2[1]  #                                 Numpy("uint8","HW",ch_repr,VR_0_255),
-        if _coconut_case_match_check_2:  #                                 Numpy("uint8","HW",ch_repr,VR_0_255),
-            return ([DataEdge(imdef, Numpy("uint8", "HWC", ch_repr, VR_0_255), np.array, 1, name="YCbCr image to numpy"), ])  #                     return [DataEdge(imdef,
-
-    if not _coconut_case_match_check_2:  # A grayscale Image becomes a numpy array  #         match PILImages("L",ch_repr): # A grayscale Image becomes a numpy array
-        _coconut_match_set_name_ch_repr = _coconut_sentinel  # A grayscale Image becomes a numpy array  #         match PILImages("L",ch_repr): # A grayscale Image becomes a numpy array
-        if (_coconut.isinstance(_coconut_case_match_to_2, PILImages)) and (_coconut.len(_coconut_case_match_to_2) == 2) and (_coconut_case_match_to_2[0] == "L"):  # A grayscale Image becomes a numpy array  #         match PILImages("L",ch_repr): # A grayscale Image becomes a numpy array
-            _coconut_match_set_name_ch_repr = _coconut_case_match_to_2[1]  # A grayscale Image becomes a numpy array  #         match PILImages("L",ch_repr): # A grayscale Image becomes a numpy array
-            _coconut_case_match_check_2 = True  # A grayscale Image becomes a numpy array  #         match PILImages("L",ch_repr): # A grayscale Image becomes a numpy array
-        if _coconut_case_match_check_2:  # A grayscale Image becomes a numpy array  #         match PILImages("L",ch_repr): # A grayscale Image becomes a numpy array
-            if _coconut_match_set_name_ch_repr is not _coconut_sentinel:  # A grayscale Image becomes a numpy array  #         match PILImages("L",ch_repr): # A grayscale Image becomes a numpy array
-                ch_repr = _coconut_case_match_to_2[1]  # A grayscale Image becomes a numpy array  #         match PILImages("L",ch_repr): # A grayscale Image becomes a numpy array
-        if _coconut_case_match_check_2:  # A grayscale Image becomes a numpy array  #         match PILImages("L",ch_repr): # A grayscale Image becomes a numpy array
-            return ([DataEdge(imdef, Numpy("uint8", "BHW", ch_repr, VR_0_255), (_coconut_base_compose(_coconut.functools.partial(fmap, np.array), (np.array, 0))), 1, name="image_to_numpy"), ])  #             return [DataEdge(imdef,
-    if not _coconut_case_match_check_2:  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
-        _coconut_match_set_name_mode = _coconut_sentinel  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
-        _coconut_match_set_name_ch_repr = _coconut_sentinel  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
-        if (_coconut.isinstance(_coconut_case_match_to_2, PILImages)) and (_coconut.len(_coconut_case_match_to_2) == 2):  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
-            _coconut_match_set_name_mode = _coconut_case_match_to_2[0]  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
-            _coconut_match_set_name_ch_repr = _coconut_case_match_to_2[1]  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
-            _coconut_case_match_check_2 = True  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
-        if _coconut_case_match_check_2:  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
-            if _coconut_match_set_name_mode is not _coconut_sentinel:  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
-                mode = _coconut_case_match_to_2[0]  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
-            if _coconut_match_set_name_ch_repr is not _coconut_sentinel:  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
-                ch_repr = _coconut_case_match_to_2[1]  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
-        if _coconut_case_match_check_2:  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
-            return ([DataEdge(imdef, Numpy("uint8", "BHWC", ch_repr, VR_0_255), (_coconut_base_compose(_coconut.functools.partial(fmap, np.array), (np.array, 0))), 1, name="image_to_numpy"), ])  #             return [DataEdge(imdef,
-    return ([])  #     return []
-@to_imagedef  # @to_imagedef
-def to_torch(imdef):  # def to_torch(imdef):
-    import torch  #     import torch
     _coconut_case_match_to_3 = imdef  #     case imdef:
     _coconut_case_match_check_3 = False  #     case imdef:
     _coconut_match_set_name_dtype = _coconut_sentinel  #     case imdef:
     _coconut_match_set_name_arng = _coconut_sentinel  #     case imdef:
     _coconut_match_set_name_ch_repr = _coconut_sentinel  #     case imdef:
     _coconut_match_set_name_vr = _coconut_sentinel  #     case imdef:
-    if (_coconut.isinstance(_coconut_case_match_to_3, Numpy)) and (_coconut.len(_coconut_case_match_to_3) == 4):  #     case imdef:
+    if (_coconut.isinstance(_coconut_case_match_to_3, Torch)) and (_coconut.len(_coconut_case_match_to_3) == 4):  #     case imdef:
         _coconut_match_set_name_dtype = _coconut_case_match_to_3[0]  #     case imdef:
         _coconut_match_set_name_arng = _coconut_case_match_to_3[1]  #     case imdef:
         _coconut_match_set_name_ch_repr = _coconut_case_match_to_3[2]  #     case imdef:
@@ -520,8 +467,78 @@ def to_torch(imdef):  # def to_torch(imdef):
         if _coconut_match_set_name_vr is not _coconut_sentinel:  #     case imdef:
             vr = _coconut_case_match_to_3[3]  #     case imdef:
     if _coconut_case_match_check_3:  #     case imdef:
-        return ([DataEdge(imdef, Torch(dtype, arng, ch_repr, vr), torch.from_numpy, 2, name="to_torch"), ])  #             return [DataEdge(imdef,Torch(dtype,arng,ch_repr,vr),torch.from_numpy,2,name="to_torch")]
+        return ([DataEdge(imdef, Numpy(dtype, arng, ch_repr, vr), (_coconut_base_compose(_coconut.operator.methodcaller("detach"), (_coconut.operator.methodcaller("cpu"), 0), (_coconut.operator.methodcaller("numpy"), 0))), 1, name="torch_to_numpy"), ])  #             return [DataEdge(imdef,
+    if not _coconut_case_match_check_3:  #                          Numpy(dtype  ,arng ,ch_repr,vr),
+        _coconut_match_set_name_ch_repr = _coconut_sentinel  #                          Numpy(dtype  ,arng ,ch_repr,vr),
+        if (_coconut.isinstance(_coconut_case_match_to_3, PILImage)) and (_coconut.len(_coconut_case_match_to_3) == 2) and (_coconut_case_match_to_3[0] == "RGB"):  #                          Numpy(dtype  ,arng ,ch_repr,vr),
+            _coconut_match_set_name_ch_repr = _coconut_case_match_to_3[1]  #                          Numpy(dtype  ,arng ,ch_repr,vr),
+            _coconut_case_match_check_3 = True  #                          Numpy(dtype  ,arng ,ch_repr,vr),
+        if _coconut_case_match_check_3:  #                          Numpy(dtype  ,arng ,ch_repr,vr),
+            if _coconut_match_set_name_ch_repr is not _coconut_sentinel:  #                          Numpy(dtype  ,arng ,ch_repr,vr),
+                ch_repr = _coconut_case_match_to_3[1]  #                          Numpy(dtype  ,arng ,ch_repr,vr),
+        if _coconut_case_match_check_3:  #                          Numpy(dtype  ,arng ,ch_repr,vr),
+            return ([DataEdge(imdef, Numpy("uint8", "HWC", ch_repr, VR_0_255), np.array, 1, name="image_to_numpy"), ])  #                     return [DataEdge(imdef,
+    if not _coconut_case_match_check_3:  #                                 Numpy("uint8","HWC",ch_repr,VR_0_255),
+        _coconut_match_set_name_ch_repr = _coconut_sentinel  #                                 Numpy("uint8","HWC",ch_repr,VR_0_255),
+        if (_coconut.isinstance(_coconut_case_match_to_3, PILImage)) and (_coconut.len(_coconut_case_match_to_3) == 2) and (_coconut_case_match_to_3[0] == "L"):  #                                 Numpy("uint8","HWC",ch_repr,VR_0_255),
+            _coconut_match_set_name_ch_repr = _coconut_case_match_to_3[1]  #                                 Numpy("uint8","HWC",ch_repr,VR_0_255),
+            _coconut_case_match_check_3 = True  #                                 Numpy("uint8","HWC",ch_repr,VR_0_255),
+        if _coconut_case_match_check_3:  #                                 Numpy("uint8","HWC",ch_repr,VR_0_255),
+            if _coconut_match_set_name_ch_repr is not _coconut_sentinel:  #                                 Numpy("uint8","HWC",ch_repr,VR_0_255),
+                ch_repr = _coconut_case_match_to_3[1]  #                                 Numpy("uint8","HWC",ch_repr,VR_0_255),
+        if _coconut_case_match_check_3:  #                                 Numpy("uint8","HWC",ch_repr,VR_0_255),
+            return ([DataEdge(imdef, Numpy("uint8", "HW", ch_repr, VR_0_255), np.array, 1, name="image_to_numpy"), ])  #                     return [DataEdge(imdef,
+    if not _coconut_case_match_check_3:  #                                 Numpy("uint8","HW",ch_repr,VR_0_255),
+        _coconut_match_set_name_ch_repr = _coconut_sentinel  #                                 Numpy("uint8","HW",ch_repr,VR_0_255),
+        if (_coconut.isinstance(_coconut_case_match_to_3, PILImage)) and (_coconut.len(_coconut_case_match_to_3) == 2) and (_coconut_case_match_to_3[0] == "YCbCr"):  #                                 Numpy("uint8","HW",ch_repr,VR_0_255),
+            _coconut_match_set_name_ch_repr = _coconut_case_match_to_3[1]  #                                 Numpy("uint8","HW",ch_repr,VR_0_255),
+            _coconut_case_match_check_3 = True  #                                 Numpy("uint8","HW",ch_repr,VR_0_255),
+        if _coconut_case_match_check_3:  #                                 Numpy("uint8","HW",ch_repr,VR_0_255),
+            if _coconut_match_set_name_ch_repr is not _coconut_sentinel:  #                                 Numpy("uint8","HW",ch_repr,VR_0_255),
+                ch_repr = _coconut_case_match_to_3[1]  #                                 Numpy("uint8","HW",ch_repr,VR_0_255),
+        if _coconut_case_match_check_3:  #                                 Numpy("uint8","HW",ch_repr,VR_0_255),
+            return ([DataEdge(imdef, Numpy("uint8", "HWC", ch_repr, VR_0_255), np.array, 1, name="YCbCr image to numpy"), ])  #                     return [DataEdge(imdef,
+    if not _coconut_case_match_check_3:  #                                  Numpy("uint8","HWC",ch_repr,VR_0_255),
+        _coconut_match_set_name_mode = _coconut_sentinel  #                                  Numpy("uint8","HWC",ch_repr,VR_0_255),
+        _coconut_match_set_name_ch_repr = _coconut_sentinel  #                                  Numpy("uint8","HWC",ch_repr,VR_0_255),
+        if (_coconut.isinstance(_coconut_case_match_to_3, PILImage)) and (_coconut.len(_coconut_case_match_to_3) == 2):  #                                  Numpy("uint8","HWC",ch_repr,VR_0_255),
+            _coconut_match_set_name_mode = _coconut_case_match_to_3[0]  #                                  Numpy("uint8","HWC",ch_repr,VR_0_255),
+            _coconut_match_set_name_ch_repr = _coconut_case_match_to_3[1]  #                                  Numpy("uint8","HWC",ch_repr,VR_0_255),
+            _coconut_case_match_check_3 = True  #                                  Numpy("uint8","HWC",ch_repr,VR_0_255),
+        if _coconut_case_match_check_3:  #                                  Numpy("uint8","HWC",ch_repr,VR_0_255),
+            if _coconut_match_set_name_mode is not _coconut_sentinel:  #                                  Numpy("uint8","HWC",ch_repr,VR_0_255),
+                mode = _coconut_case_match_to_3[0]  #                                  Numpy("uint8","HWC",ch_repr,VR_0_255),
+            if _coconut_match_set_name_ch_repr is not _coconut_sentinel:  #                                  Numpy("uint8","HWC",ch_repr,VR_0_255),
+                ch_repr = _coconut_case_match_to_3[1]  #                                  Numpy("uint8","HWC",ch_repr,VR_0_255),
+        if _coconut_case_match_check_3:  #                                  Numpy("uint8","HWC",ch_repr,VR_0_255),
+            return ([DataEdge(imdef, Numpy("uint8", "HWC", ch_repr, VR_0_255), np.array, 1, name="{_coconut_format_0} to numpy".format(_coconut_format_0=(ch_repr))), ])  #                     return [DataEdge(
+
+    if not _coconut_case_match_check_3:  # A grayscale Image becomes a numpy array  #         match PILImages("L",ch_repr): # A grayscale Image becomes a numpy array
+        _coconut_match_set_name_ch_repr = _coconut_sentinel  # A grayscale Image becomes a numpy array  #         match PILImages("L",ch_repr): # A grayscale Image becomes a numpy array
+        if (_coconut.isinstance(_coconut_case_match_to_3, PILImages)) and (_coconut.len(_coconut_case_match_to_3) == 2) and (_coconut_case_match_to_3[0] == "L"):  # A grayscale Image becomes a numpy array  #         match PILImages("L",ch_repr): # A grayscale Image becomes a numpy array
+            _coconut_match_set_name_ch_repr = _coconut_case_match_to_3[1]  # A grayscale Image becomes a numpy array  #         match PILImages("L",ch_repr): # A grayscale Image becomes a numpy array
+            _coconut_case_match_check_3 = True  # A grayscale Image becomes a numpy array  #         match PILImages("L",ch_repr): # A grayscale Image becomes a numpy array
+        if _coconut_case_match_check_3:  # A grayscale Image becomes a numpy array  #         match PILImages("L",ch_repr): # A grayscale Image becomes a numpy array
+            if _coconut_match_set_name_ch_repr is not _coconut_sentinel:  # A grayscale Image becomes a numpy array  #         match PILImages("L",ch_repr): # A grayscale Image becomes a numpy array
+                ch_repr = _coconut_case_match_to_3[1]  # A grayscale Image becomes a numpy array  #         match PILImages("L",ch_repr): # A grayscale Image becomes a numpy array
+        if _coconut_case_match_check_3:  # A grayscale Image becomes a numpy array  #         match PILImages("L",ch_repr): # A grayscale Image becomes a numpy array
+            return ([DataEdge(imdef, Numpy("uint8", "BHW", ch_repr, VR_0_255), (_coconut_base_compose(_coconut.functools.partial(fmap, np.array), (np.array, 0))), 1, name="image_to_numpy"), ])  #             return [DataEdge(imdef,
+    if not _coconut_case_match_check_3:  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
+        _coconut_match_set_name_mode = _coconut_sentinel  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
+        _coconut_match_set_name_ch_repr = _coconut_sentinel  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
+        if (_coconut.isinstance(_coconut_case_match_to_3, PILImages)) and (_coconut.len(_coconut_case_match_to_3) == 2):  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
+            _coconut_match_set_name_mode = _coconut_case_match_to_3[0]  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
+            _coconut_match_set_name_ch_repr = _coconut_case_match_to_3[1]  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
+            _coconut_case_match_check_3 = True  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
+        if _coconut_case_match_check_3:  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
+            if _coconut_match_set_name_mode is not _coconut_sentinel:  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
+                mode = _coconut_case_match_to_3[0]  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
+            if _coconut_match_set_name_ch_repr is not _coconut_sentinel:  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
+                ch_repr = _coconut_case_match_to_3[1]  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
+        if _coconut_case_match_check_3:  #                          Numpy("uint8","BHW",ch_repr,VR_0_255),
+            return ([DataEdge(imdef, Numpy("uint8", "BHWC", ch_repr, VR_0_255), (_coconut_base_compose(_coconut.functools.partial(fmap, np.array), (np.array, 0))), 1, name="image_to_numpy"), ])  #             return [DataEdge(imdef,
     return ([])  #     return []
+
 @to_imagedef  # @to_imagedef
 def change_dtype(imdef: 'ImageDef'):  # TODO match value range to dtype with bool type  # def change_dtype(imdef:ImageDef):# TODO match value range to dtype with bool type
     _coconut_case_match_to_4 = imdef  #     case imdef:
@@ -808,117 +825,7 @@ def RGB_to_YCbCr(state):
             name="YCbCr to RGB"
             )]
 """  # """
-def rgb_to_ycbcr(image: 'torch.Tensor') -> 'torch.Tensor':  # def rgb_to_ycbcr(image: torch.Tensor) -> torch.Tensor:
-    r"""Convert an RGB image to YCbCr.
 
-    Args:
-        image (torch.Tensor): RGB Image to be converted to YCbCr with shape :math:`(*, 3, H, W)`.
-
-    Returns:
-        torch.Tensor: YCbCr version of the image with shape :math:`(*, 3, H, W)`.
-
-    Examples:
-        >>> input = torch.rand(2, 3, 4, 5)
-        >>> output = rgb_to_ycbcr(input)  # 2x3x4x5
-    """  #     """
-    if not isinstance(image, torch.Tensor):  #     if not isinstance(image, torch.Tensor):
-        raise TypeError("Input type is not a torch.Tensor. Got {}".format(type(image)))  #         raise TypeError("Input type is not a torch.Tensor. Got {}".format(
-
-    if len(image.shape) < 3 or image.shape[-3] != 3:  #     if len(image.shape) < 3 or image.shape[-3] != 3:
-        raise ValueError("Input size must have a shape of (*, 3, H, W). Got {}".format(image.shape))  #         raise ValueError("Input size must have a shape of (*, 3, H, W). Got {}"
-
-    r = image[..., 0, :, :]  # type: torch.Tensor  #     r: torch.Tensor = image[..., 0, :, :]
-    if "__annotations__" not in _coconut.locals():  #     r: torch.Tensor = image[..., 0, :, :]
-        __annotations__ = {}  #     r: torch.Tensor = image[..., 0, :, :]
-    __annotations__["r"] = 'torch.Tensor'  #     r: torch.Tensor = image[..., 0, :, :]
-    g = image[..., 1, :, :]  # type: torch.Tensor  #     g: torch.Tensor = image[..., 1, :, :]
-    if "__annotations__" not in _coconut.locals():  #     g: torch.Tensor = image[..., 1, :, :]
-        __annotations__ = {}  #     g: torch.Tensor = image[..., 1, :, :]
-    __annotations__["g"] = 'torch.Tensor'  #     g: torch.Tensor = image[..., 1, :, :]
-    b = image[..., 2, :, :]  # type: torch.Tensor  #     b: torch.Tensor = image[..., 2, :, :]
-    if "__annotations__" not in _coconut.locals():  #     b: torch.Tensor = image[..., 2, :, :]
-        __annotations__ = {}  #     b: torch.Tensor = image[..., 2, :, :]
-    __annotations__["b"] = 'torch.Tensor'  #     b: torch.Tensor = image[..., 2, :, :]
-
-    delta = 0.5  # type: float  #     delta: float = 0.5
-    if "__annotations__" not in _coconut.locals():  #     delta: float = 0.5
-        __annotations__ = {}  #     delta: float = 0.5
-    __annotations__["delta"] = 'float'  #     delta: float = 0.5
-    y = 0.299 * r + 0.587 * g + 0.114 * b  # type: torch.Tensor  #     y: torch.Tensor = 0.299 * r + 0.587 * g + 0.114 * b
-    if "__annotations__" not in _coconut.locals():  #     y: torch.Tensor = 0.299 * r + 0.587 * g + 0.114 * b
-        __annotations__ = {}  #     y: torch.Tensor = 0.299 * r + 0.587 * g + 0.114 * b
-    __annotations__["y"] = 'torch.Tensor'  #     y: torch.Tensor = 0.299 * r + 0.587 * g + 0.114 * b
-    cb = (b - y) * 0.564 + delta  # type: torch.Tensor  #     cb: torch.Tensor = (b - y) * 0.564 + delta
-    if "__annotations__" not in _coconut.locals():  #     cb: torch.Tensor = (b - y) * 0.564 + delta
-        __annotations__ = {}  #     cb: torch.Tensor = (b - y) * 0.564 + delta
-    __annotations__["cb"] = 'torch.Tensor'  #     cb: torch.Tensor = (b - y) * 0.564 + delta
-    cr = (r - y) * 0.713 + delta  # type: torch.Tensor  #     cr: torch.Tensor = (r - y) * 0.713 + delta
-    if "__annotations__" not in _coconut.locals():  #     cr: torch.Tensor = (r - y) * 0.713 + delta
-        __annotations__ = {}  #     cr: torch.Tensor = (r - y) * 0.713 + delta
-    __annotations__["cr"] = 'torch.Tensor'  #     cr: torch.Tensor = (r - y) * 0.713 + delta
-    return (torch.stack([y, cb, cr], -3))  #     return torch.stack([y, cb, cr], -3)
-
-
-def ycbcr_to_rgb(image: 'torch.Tensor') -> 'torch.Tensor':  # def ycbcr_to_rgb(image: torch.Tensor) -> torch.Tensor:
-    r"""Convert an YCbCr image to RGB.
-
-    The image data is assumed to be in the range of (0, 1).
-
-    Args:
-        image (torch.Tensor): YCbCr Image to be converted to RGB with shape :math:`(*, 3, H, W)`.
-
-    Returns:
-        torch.Tensor: RGB version of the image with shape :math:`(*, 3, H, W)`.
-
-    Examples:
-        >>> input = torch.rand(2, 3, 4, 5)
-        >>> output = ycbcr_to_rgb(input)  # 2x3x4x5
-    """  #     """
-    if not isinstance(image, torch.Tensor):  #     if not isinstance(image, torch.Tensor):
-        raise TypeError("Input type is not a torch.Tensor. Got {}".format(type(image)))  #         raise TypeError("Input type is not a torch.Tensor. Got {}".format(
-
-    if len(image.shape) < 3 or image.shape[-3] != 3:  #     if len(image.shape) < 3 or image.shape[-3] != 3:
-        raise ValueError("Input size must have a shape of (*, 3, H, W). Got {}".format(image.shape))  #         raise ValueError("Input size must have a shape of (*, 3, H, W). Got {}"
-
-    y = image[..., 0, :, :]  # type: torch.Tensor  #     y: torch.Tensor = image[..., 0, :, :]
-    if "__annotations__" not in _coconut.locals():  #     y: torch.Tensor = image[..., 0, :, :]
-        __annotations__ = {}  #     y: torch.Tensor = image[..., 0, :, :]
-    __annotations__["y"] = 'torch.Tensor'  #     y: torch.Tensor = image[..., 0, :, :]
-    cb = image[..., 1, :, :]  # type: torch.Tensor  #     cb: torch.Tensor = image[..., 1, :, :]
-    if "__annotations__" not in _coconut.locals():  #     cb: torch.Tensor = image[..., 1, :, :]
-        __annotations__ = {}  #     cb: torch.Tensor = image[..., 1, :, :]
-    __annotations__["cb"] = 'torch.Tensor'  #     cb: torch.Tensor = image[..., 1, :, :]
-    cr = image[..., 2, :, :]  # type: torch.Tensor  #     cr: torch.Tensor = image[..., 2, :, :]
-    if "__annotations__" not in _coconut.locals():  #     cr: torch.Tensor = image[..., 2, :, :]
-        __annotations__ = {}  #     cr: torch.Tensor = image[..., 2, :, :]
-    __annotations__["cr"] = 'torch.Tensor'  #     cr: torch.Tensor = image[..., 2, :, :]
-
-    delta = 0.5  # type: float  #     delta: float = 0.5
-    if "__annotations__" not in _coconut.locals():  #     delta: float = 0.5
-        __annotations__ = {}  #     delta: float = 0.5
-    __annotations__["delta"] = 'float'  #     delta: float = 0.5
-    cb_shifted = cb - delta  # type: torch.Tensor  #     cb_shifted: torch.Tensor = cb - delta
-    if "__annotations__" not in _coconut.locals():  #     cb_shifted: torch.Tensor = cb - delta
-        __annotations__ = {}  #     cb_shifted: torch.Tensor = cb - delta
-    __annotations__["cb_shifted"] = 'torch.Tensor'  #     cb_shifted: torch.Tensor = cb - delta
-    cr_shifted = cr - delta  # type: torch.Tensor  #     cr_shifted: torch.Tensor = cr - delta
-    if "__annotations__" not in _coconut.locals():  #     cr_shifted: torch.Tensor = cr - delta
-        __annotations__ = {}  #     cr_shifted: torch.Tensor = cr - delta
-    __annotations__["cr_shifted"] = 'torch.Tensor'  #     cr_shifted: torch.Tensor = cr - delta
-
-    r = y + 1.403 * cr_shifted  # type: torch.Tensor  #     r: torch.Tensor = y + 1.403 * cr_shifted
-    if "__annotations__" not in _coconut.locals():  #     r: torch.Tensor = y + 1.403 * cr_shifted
-        __annotations__ = {}  #     r: torch.Tensor = y + 1.403 * cr_shifted
-    __annotations__["r"] = 'torch.Tensor'  #     r: torch.Tensor = y + 1.403 * cr_shifted
-    g = y - 0.714 * cr_shifted - 0.344 * cb_shifted  # type: torch.Tensor  #     g: torch.Tensor = y - 0.714 * cr_shifted - 0.344 * cb_shifted
-    if "__annotations__" not in _coconut.locals():  #     g: torch.Tensor = y - 0.714 * cr_shifted - 0.344 * cb_shifted
-        __annotations__ = {}  #     g: torch.Tensor = y - 0.714 * cr_shifted - 0.344 * cb_shifted
-    __annotations__["g"] = 'torch.Tensor'  #     g: torch.Tensor = y - 0.714 * cr_shifted - 0.344 * cb_shifted
-    b = y + 1.773 * cb_shifted  # type: torch.Tensor  #     b: torch.Tensor = y + 1.773 * cb_shifted
-    if "__annotations__" not in _coconut.locals():  #     b: torch.Tensor = y + 1.773 * cb_shifted
-        __annotations__ = {}  #     b: torch.Tensor = y + 1.773 * cb_shifted
-    __annotations__["b"] = 'torch.Tensor'  #     b: torch.Tensor = y + 1.773 * cb_shifted
-    return (torch.stack([r, g, b], -3))  #     return torch.stack([r, g, b], -3)
 
 
 @to_imagedef  # @to_imagedef

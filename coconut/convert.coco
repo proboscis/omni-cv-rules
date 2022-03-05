@@ -1,17 +1,16 @@
 import numpy as np
 from loguru import logger
 from PIL import Image
-import torch
 import re
 from frozendict import frozendict as fdict
 from frozendict import frozendict
-
+from omni_cv_rules.py_38.torch_rules import ycbcr_to_rgb,rgb_to_ycbcr
+from omni_cv_rules.place_holder.torch_proxy import torch
 VR_0_1 = "0_1"
 VR_0_255 = "0_255"
 VR_None = "None"
 VR_XYZ_Normalized = "XYZ_Normalized"
 ch_splitter = re.compile("[A-Z][a-z]*").findall
-
 data DataType
 #TODO add shape information to tensorlike
 #TODO add shape information to PILImage
@@ -73,6 +72,7 @@ data DataEdge(a is DataType,b is DataType,f,cost is int,name is str,meta_shifter
                         logger.info(f"{self.name}:\n{src.meta['shape']}->{new_meta['shape']}")
         except Exception as e:
             from IPython import embed
+            logger.error(f"error while converting to edge!")
             embed()
             raise e
 data Edge(a is ImageDef,b is ImageDef,f,cost is int,name="undefined"):
@@ -98,6 +98,14 @@ def to_imagedef(f):
             logger.warning(f"{hasattr(imdef,'data_type')}")
             raise e
     return _inner
+@to_imagedef
+def to_torch(imdef):
+
+    case imdef:
+        match Numpy(dtype,arng,ch_repr,vr): # only numpy can directly become a torch tensor
+            return [DataEdge(imdef,Torch(dtype,arng,ch_repr,vr),torch.from_numpy,2,name="to_torch")]
+    return []
+
 
 # there are kinds of rules
 # 1. doesnt care about shape, and no shape change
@@ -149,6 +157,14 @@ def to_numpy(imdef:ImageDef)->List[DataEdge]:
                                  1,
                                  name="YCbCr image to numpy"
                     )]
+        match PILImage(mode,ch_repr):
+                    return [DataEdge(
+                        imdef,
+                        Numpy("uint8","HWC",ch_repr,VR_0_255),
+                        np.array,
+                        1,
+                        name=f"{ch_repr} to numpy"
+                    )]
 
         match PILImages("L",ch_repr): # A grayscale Image becomes a numpy array
             return [DataEdge(imdef,
@@ -163,13 +179,7 @@ def to_numpy(imdef:ImageDef)->List[DataEdge]:
                          1,
                          name="image_to_numpy")]
     return []
-@to_imagedef
-def to_torch(imdef):
-    import torch
-    case imdef:
-        match Numpy(dtype,arng,ch_repr,vr): # only numpy can directly become a torch tensor
-            return [DataEdge(imdef,Torch(dtype,arng,ch_repr,vr),torch.from_numpy,2,name="to_torch")]
-    return []
+
 @to_imagedef
 def change_dtype(imdef:ImageDef):# TODO match value range to dtype with bool type
     case imdef:
@@ -324,73 +334,7 @@ def RGB_to_YCbCr(state):
             name="YCbCr to RGB"
             )]
 """
-def rgb_to_ycbcr(image: torch.Tensor) -> torch.Tensor:
-    r"""Convert an RGB image to YCbCr.
 
-    Args:
-        image (torch.Tensor): RGB Image to be converted to YCbCr with shape :math:`(*, 3, H, W)`.
-
-    Returns:
-        torch.Tensor: YCbCr version of the image with shape :math:`(*, 3, H, W)`.
-
-    Examples:
-        >>> input = torch.rand(2, 3, 4, 5)
-        >>> output = rgb_to_ycbcr(input)  # 2x3x4x5
-    """
-    if not isinstance(image, torch.Tensor):
-        raise TypeError("Input type is not a torch.Tensor. Got {}".format(
-            type(image)))
-
-    if len(image.shape) < 3 or image.shape[-3] != 3:
-        raise ValueError("Input size must have a shape of (*, 3, H, W). Got {}"
-                         .format(image.shape))
-
-    r: torch.Tensor = image[..., 0, :, :]
-    g: torch.Tensor = image[..., 1, :, :]
-    b: torch.Tensor = image[..., 2, :, :]
-
-    delta: float = 0.5
-    y: torch.Tensor = 0.299 * r + 0.587 * g + 0.114 * b
-    cb: torch.Tensor = (b - y) * 0.564 + delta
-    cr: torch.Tensor = (r - y) * 0.713 + delta
-    return torch.stack([y, cb, cr], -3)
-
-
-def ycbcr_to_rgb(image: torch.Tensor) -> torch.Tensor:
-    r"""Convert an YCbCr image to RGB.
-
-    The image data is assumed to be in the range of (0, 1).
-
-    Args:
-        image (torch.Tensor): YCbCr Image to be converted to RGB with shape :math:`(*, 3, H, W)`.
-
-    Returns:
-        torch.Tensor: RGB version of the image with shape :math:`(*, 3, H, W)`.
-
-    Examples:
-        >>> input = torch.rand(2, 3, 4, 5)
-        >>> output = ycbcr_to_rgb(input)  # 2x3x4x5
-    """
-    if not isinstance(image, torch.Tensor):
-        raise TypeError("Input type is not a torch.Tensor. Got {}".format(
-            type(image)))
-
-    if len(image.shape) < 3 or image.shape[-3] != 3:
-        raise ValueError("Input size must have a shape of (*, 3, H, W). Got {}"
-                         .format(image.shape))
-
-    y: torch.Tensor = image[..., 0, :, :]
-    cb: torch.Tensor = image[..., 1, :, :]
-    cr: torch.Tensor = image[..., 2, :, :]
-
-    delta: float = 0.5
-    cb_shifted: torch.Tensor = cb - delta
-    cr_shifted: torch.Tensor = cr - delta
-
-    r: torch.Tensor = y + 1.403 * cr_shifted
-    g: torch.Tensor = y - 0.714 * cr_shifted - 0.344 * cb_shifted
-    b: torch.Tensor = y + 1.773 * cb_shifted
-    return torch.stack([r, g, b], -3)
 
 
 @to_imagedef

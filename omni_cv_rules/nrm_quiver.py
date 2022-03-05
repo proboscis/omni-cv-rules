@@ -10,16 +10,15 @@ from matplotlib import pyplot as plt
 from omni_converter.solver.rules import RuleEdge
 
 
-def to_nrm_quiver_auto(nrm: "AutoData") -> "AutoData":
-    return to_nrm_quiver(nrm.to("numpy,float32,HWC,XYZ,-1_1"))
+def to_nrm_quiver_auto(nrm: "AutoData",auto_func) -> "AutoData":
+    return to_nrm_quiver(nrm.to("numpy,float32,HWC,XYZ,-1_1"),auto_func)
 
 
-def to_nrm_quiver(nrm: np.ndarray) -> "AutoData":
+def to_nrm_quiver(nrm: np.ndarray,auto_func) -> "AutoData":
     # fmt: numpy,float32,HWC,XYZ,-1_1
     # converting an image to nrm_quiver destructs semantic consistency. should I avoid adding this to rule?
     # I guess not.
     # we need 10 for 256 px so
-    from data_tree import auto
     np_nrm = nrm  # == ("numpy,float32,HWC,XYZ,-1_1")
     h, w, c = np_nrm.shape
     figw = w / 256 * 10
@@ -36,7 +35,7 @@ def to_nrm_quiver(nrm: np.ndarray) -> "AutoData":
     plt.savefig(buf, format="png")
     buf.seek(0)
     img = plt.imread(buf)
-    return auto("numpy,float32,HWC,RGBA,0_1")(img)
+    return auto_func("numpy,float32,HWC,RGBA,0_1",img)
 
 
 def swap_channel_order(img: np.ndarray, src_idx, dst_idx):

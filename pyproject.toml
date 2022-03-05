@@ -1,13 +1,12 @@
 [tool.poetry]
 name = "omni-cv-rules"
-version = "0.1.2"
+version = "0.1.8"
 description = ""
 authors = ["Kento Masui <nameissoap@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.7"
 py-omni-converter="*"
-torch = "*"
 numpy = "*"
 Pillow = "*"
 frozendict = "*"
@@ -15,7 +14,7 @@ ipywidgets = "*"
 pprintpp = "*"
 pandas = "*"
 bqplot = "*"
-torchvision = "*"
+attrs = "*"
 [tool.poetry.dev-dependencies]
 coconut = "*"
 invoke = "*"

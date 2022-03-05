@@ -1,4 +1,4 @@
-from omni_converter.solver.rules import AutoRuleBook, CastLambda, ConversionLambda
+from omni_converter.solver.rules import AutoRuleBook, CastLambda, ConversionLambda, RuleEdge
 from omni_cv_rules.coconut.convert import imdef_neighbors, rule_xyz_to_rgb, rule_batch_xyz_to_rgb, \
     rule_VR_None_to_normalized, rule_add_channel, rule_swap_RGB_BGR
 from omni_cv_rules.coconut.omni_converter import cast_imdef_str_to_imdef, cast_imdef_to_imdef_str, dict2imdef, \
@@ -32,6 +32,14 @@ def create_alias_rule(a, b):
 
     return create_cast_rule(caster, f"alias:{a}=={b}")
 
+def rule_to_hsv(state):
+    if state=="image,RGB,RGB":
+        return [RuleEdge(
+            converter = lambda img:img.convert("HSV"),
+            new_format="image,HSV,HSV",
+            cost=1,
+            name=f"PIL RGB to PIL HSV"
+        )]
 
 CV_RULEBOOK = AutoRuleBook().add_rules(
     imdef_neighbors,
@@ -63,7 +71,7 @@ CV_RULEBOOK = AutoRuleBook().add_rules(
     # AutoSolver.create_conversion_rule(rule_lab_value_conversion),
     create_conversion_rule(numpys_to_numpy),
     create_conversion_rule(tensor_to_list),
-    # create_conversion_rule(pil_convert),
+    create_conversion_rule(rule_to_hsv),
     create_conversion_rule(rgb_to_rgba),
     create_conversion_rule(repeat_ch),
     create_conversion_rule(torch_img_to_pixpix_input),

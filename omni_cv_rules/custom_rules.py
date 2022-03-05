@@ -49,4 +49,4 @@ custom_rule_book = AutoRuleBook().add_rules(
     pil_img_to_base64,
     base64_png_to_html,
     custom_dataframe_viz
-).add_alias("html", "_repr_html_")
+).add_alias("html", "_repr_html_").add_alias("base64","base64_png")
