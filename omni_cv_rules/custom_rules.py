@@ -45,8 +45,8 @@ def custom_dataframe_viz(df):
     return df.to_html(escape=False, formatters=formatters)
 
 
-custom_rule_book = AutoRuleBook().add_rules(
+custom_rule_book = AutoRuleBook(id="custom_rule_book").add_rules(
     pil_img_to_base64,
     base64_png_to_html,
     custom_dataframe_viz
-).add_alias("html", "_repr_html_").add_alias("base64","base64_png")
+).add_alias("html", "_repr_html_").add_alias("base64","base64_png").set_id("custom_rule_book")

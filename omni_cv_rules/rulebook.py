@@ -41,7 +41,7 @@ def rule_to_hsv(state):
             name=f"PIL RGB to PIL HSV"
         )]
 
-CV_RULEBOOK = AutoRuleBook().add_rules(
+CV_RULEBOOK = AutoRuleBook(id="CV_RULEBOOK").add_rules(
     imdef_neighbors,
     rule_xyz_to_rgb,
     rule_batch_xyz_to_rgb,
@@ -83,4 +83,4 @@ CV_RULEBOOK = AutoRuleBook().add_rules(
     create_alias_rule("numpy_rgba", "numpy,uint8,HWC,RGBA,0_255"),
 ) + custom_rule_book.add_recursive_rule(
     intra_list_conversions
-)
+).set_id("CV_RULEBOOK")
