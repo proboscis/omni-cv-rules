@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x93754d2e
+# __coconut_hash__ = 0x687d76f7
 
 # Compiled with Coconut version 1.6.0 [Vocational Guidance Counsellor]
 
@@ -59,7 +59,10 @@ class DataType(_coconut.collections.namedtuple("DataType", ())):  # data DataTyp
 #TODO add shape information to PILImage
 #TODO make rules be able to handle other metadata.
 #so let's assume the input state based on dict.
-_coconut_call_set_names(DataType)  # data TensorLike(
+
+_coconut_call_set_names(DataType)  # KNOWN_COLOR_FMTS = {
+KNOWN_COLOR_FMTS = {"HSV", "YCbCr", "RGB", "RGBA", "LAB", "CMYK"}  # KNOWN_COLOR_FMTS = {
+
 class TensorLike(_coconut.collections.namedtuple("TensorLike", ('dtype', 'arrange', 'channel_repr', 'value_range')), DataType):  # data TensorLike(
     __slots__ = ()  # data TensorLike(
     __ne__ = _coconut.object.__ne__  # data TensorLike(
@@ -418,10 +421,22 @@ def to_PILImages(imdef: 'ImageDef') -> '_coconut.typing.Sequence[Edge]':  # def 
     if _coconut_case_match_check_2:  #     case imdef:
         if _coconut_match_set_name_c_repr is not _coconut_sentinel:  #     case imdef:
             c_repr = _coconut_case_match_to_2[2]  #     case imdef:
-    if _coconut_case_match_check_2 and not (len(ch_splitter(c_repr)) in (3, 4)):  #     case imdef:
+    if _coconut_case_match_check_2 and not (c_repr in KNOWN_COLOR_FMTS):  #     case imdef:
         _coconut_case_match_check_2 = False  #     case imdef:
     if _coconut_case_match_check_2:  #     case imdef:
-        return ([DataEdge(imdef, PILImages(c_repr, c_repr), lambda ary: [(Image.fromarray)(img) for img in ary], 2, name="numpy batch {_coconut_format_0} to Images".format(_coconut_format_0=(c_repr))), ])  #             return [DataEdge(imdef,PILImages(c_repr,c_repr),ary -> [(Image.fromarray)(img) for img in ary],2,name=f"numpy batch {c_repr} to Images")]
+        return ([DataEdge(imdef, PILImages(c_repr, c_repr), lambda ary: [(Image.fromarray)(img, mode=c_repr) for img in ary], 2, name="numpy batch {_coconut_format_0} to Images with mode {_coconut_format_1}".format(_coconut_format_0=(c_repr), _coconut_format_1=(c_repr))), ])  #             return [DataEdge(imdef,PILImages(c_repr,c_repr),ary -> [(Image.fromarray)(img,mode=c_repr) for img in ary],2,name=f"numpy batch {c_repr} to Images with mode {c_repr}")]
+    if not _coconut_case_match_check_2:  #         match Numpy("uint8","BHWC", c_repr, =VR_0_255) if len(ch_splitter(c_repr)) in (3,4):
+        _coconut_match_set_name_c_repr = _coconut_sentinel  #         match Numpy("uint8","BHWC", c_repr, =VR_0_255) if len(ch_splitter(c_repr)) in (3,4):
+        if (_coconut.isinstance(_coconut_case_match_to_2, Numpy)) and (_coconut.len(_coconut_case_match_to_2) == 4) and (_coconut_case_match_to_2[0] == "uint8") and (_coconut_case_match_to_2[1] == "BHWC") and (_coconut_case_match_to_2[3] == VR_0_255):  #         match Numpy("uint8","BHWC", c_repr, =VR_0_255) if len(ch_splitter(c_repr)) in (3,4):
+            _coconut_match_set_name_c_repr = _coconut_case_match_to_2[2]  #         match Numpy("uint8","BHWC", c_repr, =VR_0_255) if len(ch_splitter(c_repr)) in (3,4):
+            _coconut_case_match_check_2 = True  #         match Numpy("uint8","BHWC", c_repr, =VR_0_255) if len(ch_splitter(c_repr)) in (3,4):
+        if _coconut_case_match_check_2:  #         match Numpy("uint8","BHWC", c_repr, =VR_0_255) if len(ch_splitter(c_repr)) in (3,4):
+            if _coconut_match_set_name_c_repr is not _coconut_sentinel:  #         match Numpy("uint8","BHWC", c_repr, =VR_0_255) if len(ch_splitter(c_repr)) in (3,4):
+                c_repr = _coconut_case_match_to_2[2]  #         match Numpy("uint8","BHWC", c_repr, =VR_0_255) if len(ch_splitter(c_repr)) in (3,4):
+        if _coconut_case_match_check_2 and not (len(ch_splitter(c_repr)) in (3, 4)):  #         match Numpy("uint8","BHWC", c_repr, =VR_0_255) if len(ch_splitter(c_repr)) in (3,4):
+            _coconut_case_match_check_2 = False  #         match Numpy("uint8","BHWC", c_repr, =VR_0_255) if len(ch_splitter(c_repr)) in (3,4):
+        if _coconut_case_match_check_2:  #         match Numpy("uint8","BHWC", c_repr, =VR_0_255) if len(ch_splitter(c_repr)) in (3,4):
+            return ([DataEdge(imdef, PILImages(c_repr, c_repr), lambda ary: [(Image.fromarray)(img) for img in ary], 2, name="numpy batch {_coconut_format_0} to Images".format(_coconut_format_0=(c_repr))), ])  #             return [DataEdge(imdef,PILImages(c_repr,c_repr),ary -> [(Image.fromarray)(img) for img in ary],2,name=f"numpy batch {c_repr} to Images")]
     if not _coconut_case_match_check_2:  #         match Numpy("uint8","BHW",c_repr,=VR_0_255):
         _coconut_match_set_name_c_repr = _coconut_sentinel  #         match Numpy("uint8","BHW",c_repr,=VR_0_255):
         if (_coconut.isinstance(_coconut_case_match_to_2, Numpy)) and (_coconut.len(_coconut_case_match_to_2) == 4) and (_coconut_case_match_to_2[0] == "uint8") and (_coconut_case_match_to_2[1] == "BHW") and (_coconut_case_match_to_2[3] == VR_0_255):  #         match Numpy("uint8","BHW",c_repr,=VR_0_255):
@@ -997,7 +1012,6 @@ def drop_meta(imdef: 'ImageDef'):  # def drop_meta(imdef:ImageDef):
     if _coconut_case_match_check_12:  #     case imdef:
         return ([Edge(a=imdef, b=ImageDef(data_type, fdict()), f=lambda a: a, cost=1, name="drop all metadata"), ])  #             return [Edge(
 
-
 @to_imagedef  # @to_imagedef
 def to_rgba(imdef: 'ImageDef'):  # def to_rgba(imdef:ImageDef):
     _coconut_case_match_to_13 = imdef  #     case imdef:
@@ -1017,10 +1031,30 @@ def to_rgba(imdef: 'ImageDef'):  # def to_rgba(imdef:ImageDef):
             arng = _coconut_case_match_to_13[1]  #     case imdef:
         if _coconut_match_set_name_ch_repr is not _coconut_sentinel:  #     case imdef:
             ch_repr = _coconut_case_match_to_13[2]  #     case imdef:
-    if _coconut_case_match_check_13 and not (len(ch_splitter(ch_repr)) == 4):  #     case imdef:
+    if _coconut_case_match_check_13 and not (ch_repr in KNOWN_COLOR_FMTS):  #     case imdef:
         _coconut_case_match_check_13 = False  #     case imdef:
     if _coconut_case_match_check_13:  #     case imdef:
-        return ([DataEdge(a=imdef, b=imdef.__class__(dtype, arng, "RGBA", "0_1"), f=lambda a: a, cost=10, name="view {_coconut_format_0} as RGBA ".format(_coconut_format_0=(ch_repr))), ])  #             return [DataEdge(a=imdef,
+        return ([])  # dont view color fmts in RGB space  #             return [] # dont view color fmts in RGB space
+    if not _coconut_case_match_check_13:  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
+        _coconut_match_set_name_dtype = _coconut_sentinel  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
+        _coconut_match_set_name_arng = _coconut_sentinel  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
+        _coconut_match_set_name_ch_repr = _coconut_sentinel  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
+        if (_coconut.isinstance(_coconut_case_match_to_13, TensorLike)) and (_coconut.len(_coconut_case_match_to_13) == 4) and (_coconut_case_match_to_13[3] == "0_1"):  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
+            _coconut_match_set_name_dtype = _coconut_case_match_to_13[0]  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
+            _coconut_match_set_name_arng = _coconut_case_match_to_13[1]  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
+            _coconut_match_set_name_ch_repr = _coconut_case_match_to_13[2]  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
+            _coconut_case_match_check_13 = True  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
+        if _coconut_case_match_check_13:  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
+            if _coconut_match_set_name_dtype is not _coconut_sentinel:  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
+                dtype = _coconut_case_match_to_13[0]  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
+            if _coconut_match_set_name_arng is not _coconut_sentinel:  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
+                arng = _coconut_case_match_to_13[1]  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
+            if _coconut_match_set_name_ch_repr is not _coconut_sentinel:  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
+                ch_repr = _coconut_case_match_to_13[2]  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
+        if _coconut_case_match_check_13 and not (len(ch_splitter(ch_repr)) == 4):  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
+            _coconut_case_match_check_13 = False  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
+        if _coconut_case_match_check_13:  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
+            return ([DataEdge(a=imdef, b=imdef.__class__(dtype, arng, "RGBA", "0_1"), f=lambda a: a, cost=10, name="view {_coconut_format_0} as RGBA ".format(_coconut_format_0=(ch_repr))), ])  #             return [DataEdge(a=imdef,
     if not _coconut_case_match_check_13:  #                          b=imdef.__class__(dtype,arng,"RGBA","0_1"),
         _coconut_match_set_name_dtype = _coconut_sentinel  #                          b=imdef.__class__(dtype,arng,"RGBA","0_1"),
         _coconut_match_set_name_arng = _coconut_sentinel  #                          b=imdef.__class__(dtype,arng,"RGBA","0_1"),

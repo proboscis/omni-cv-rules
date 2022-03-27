@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 from omni_converter.solver.rules import AutoRuleBook, CastLambda, ConversionLambda, RuleEdge
 from omni_cv_rules.coconut.convert import imdef_neighbors, rule_xyz_to_rgb, rule_batch_xyz_to_rgb, \
     rule_VR_None_to_normalized, rule_add_channel, rule_swap_RGB_BGR
@@ -32,14 +34,23 @@ def create_alias_rule(a, b):
 
     return create_cast_rule(caster, f"alias:{a}=={b}")
 
+
 def rule_to_hsv(state):
-    if state=="image,RGB,RGB":
+    if state == "image,RGB,RGB":
         return [RuleEdge(
-            converter = lambda img:img.convert("HSV"),
+            converter=lambda img: img.convert("HSV"),
             new_format="image,HSV,HSV",
             cost=1,
             name=f"PIL RGB to PIL HSV"
         )]
+    elif state == "image,HSV,HSV":
+        return [RuleEdge(
+            converter=lambda img: img.convert("RGB"),
+            new_format="image,RGB,RGB",
+            cost=1,
+            name=f"PIL HSV to PIL RGB"
+        )]
+
 
 CV_RULEBOOK = AutoRuleBook(id="CV_RULEBOOK").add_rules(
     imdef_neighbors,
