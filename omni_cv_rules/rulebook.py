@@ -7,7 +7,7 @@ from omni_cv_rules.coconut.omni_converter import cast_imdef_str_to_imdef, cast_i
     cast_ary_str_to_ary_type, img_list_is_imgs, lll_is_rgb, cast_tuple2auto_tuple, rule_format, rule_imgs2tile, \
     rule_batch_to_tiled, rule_img2widget, rule_numpy2img, rule_image2gray, rule_image_path_to_image, numpys_to_numpy, \
     tensor_to_list, rgb_to_rgba, repeat_ch, torch_img_to_pixpix_input, torch_img_to_vgg_prep, rule_to_spectrum, \
-    cast_imdef_to_dict
+    cast_imdef_to_dict, rule_image2lab, rule_lab_value_conversion
 from omni_cv_rules.coconut.recursive import intra_list_conversions
 from omni_cv_rules.coconut.to_bytes import rule_image_str_to_jpg_bytes
 from omni_cv_rules.coconut.widgets import any2widget, auto_tuple2widget
@@ -52,7 +52,7 @@ def rule_to_hsv(state):
         )]
 
 
-CV_RULEBOOK = AutoRuleBook(id="CV_RULEBOOK").add_rules(
+CV_RULEBOOK = (AutoRuleBook(id="CV_RULEBOOK").add_rules(
     imdef_neighbors,
     rule_xyz_to_rgb,
     rule_batch_xyz_to_rgb,
@@ -77,9 +77,9 @@ CV_RULEBOOK = AutoRuleBook(id="CV_RULEBOOK").add_rules(
     create_conversion_rule(rule_image2gray),
     create_conversion_rule(rule_image_path_to_image),
     create_conversion_rule(rule_image_str_to_jpg_bytes),
-    # AutoSolver.create_conversion_rule(rule_image2lab),
+    create_conversion_rule(rule_image2lab),
     # AutoSolver.create_conversion_rule(rule_rgba2laba),
-    # AutoSolver.create_conversion_rule(rule_lab_value_conversion),
+    create_conversion_rule(rule_lab_value_conversion),
     create_conversion_rule(numpys_to_numpy),
     create_conversion_rule(tensor_to_list),
     create_conversion_rule(rule_to_hsv),
@@ -94,4 +94,4 @@ CV_RULEBOOK = AutoRuleBook(id="CV_RULEBOOK").add_rules(
     create_alias_rule("numpy_rgba", "numpy,uint8,HWC,RGBA,0_255"),
 ) + custom_rule_book.add_recursive_rule(
     intra_list_conversions
-).set_id("CV_RULEBOOK")
+)).set_id("CV_RULEBOOK")

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# __coconut_hash__ = 0x687d76f7
+# __coconut_hash__ = 0x5a6480a7
 
 # Compiled with Coconut version 1.6.0 [Vocational Guidance Counsellor]
 
@@ -1054,7 +1054,7 @@ def to_rgba(imdef: 'ImageDef'):  # def to_rgba(imdef:ImageDef):
         if _coconut_case_match_check_13 and not (len(ch_splitter(ch_repr)) == 4):  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
             _coconut_case_match_check_13 = False  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
         if _coconut_case_match_check_13:  #         match TensorLike(dtype,arng,ch_repr,"0_1") if len(ch_splitter(ch_repr)) == 4:
-            return ([DataEdge(a=imdef, b=imdef.__class__(dtype, arng, "RGBA", "0_1"), f=lambda a: a, cost=10, name="view {_coconut_format_0} as RGBA ".format(_coconut_format_0=(ch_repr))), ])  #             return [DataEdge(a=imdef,
+            return ([DataEdge(a=imdef, b=imdef.__class__(dtype, arng, "RGBA", "0_1"), f=lambda a: a, cost=10, name="iew {_coconut_format_0} as RGBA ".format(_coconut_format_0=(ch_repr))), ])  #             return [DataEdge(a=imdef,
     if not _coconut_case_match_check_13:  #                          b=imdef.__class__(dtype,arng,"RGBA","0_1"),
         _coconut_match_set_name_dtype = _coconut_sentinel  #                          b=imdef.__class__(dtype,arng,"RGBA","0_1"),
         _coconut_match_set_name_arng = _coconut_sentinel  #                          b=imdef.__class__(dtype,arng,"RGBA","0_1"),
