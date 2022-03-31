@@ -132,6 +132,8 @@ def to_torch(imdef):
 @to_imagedef # doesn't change shape, so no touch
 def to_PILImages(imdef:ImageDef)->Edge[]:
     case imdef:
+        match Numpy(_,_,"LAB",_):
+            return []# you cannot convert LAB data to PILImage
         match Numpy("uint8","BHWC", c_repr, =VR_0_255) if c_repr in KNOWN_COLOR_FMTS:
             return [DataEdge(imdef,PILImages(c_repr,c_repr),ary -> [(Image.fromarray)(img,mode=c_repr) for img in ary],2,name=f"numpy batch {c_repr} to Images with mode {c_repr}")]
         match Numpy("uint8","BHWC", c_repr, =VR_0_255) if len(ch_splitter(c_repr)) in (3,4):

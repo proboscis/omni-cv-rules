@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "omni-cv-rules"
-version = "0.1.11"
+version = "0.1.13"
 description = ""
 authors = ["proboscis <nameissoap@gmail.com>"]
 license = "MIT"

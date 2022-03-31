@@ -3,6 +3,7 @@ import itertools
 from functools import partial
 from typing import List, Any
 
+import matplotlib
 import numpy as np
 from loguru import logger
 from matplotlib import pyplot as plt
@@ -10,11 +11,11 @@ from matplotlib import pyplot as plt
 from omni_converter.solver.rules import RuleEdge
 
 
-def to_nrm_quiver_auto(nrm: "AutoData",auto_func) -> "AutoData":
-    return to_nrm_quiver(nrm.to("numpy,float32,HWC,XYZ,-1_1"),auto_func)
+def to_nrm_quiver_auto(nrm: "AutoData", auto_func) -> "AutoData":
+    return to_nrm_quiver(nrm.to("numpy,float32,HWC,XYZ,-1_1"), auto_func)
 
 
-def to_nrm_quiver(nrm: np.ndarray,auto_func) -> "AutoData":
+def to_nrm_quiver(nrm: np.ndarray, auto_func) -> "AutoData":
     # fmt: numpy,float32,HWC,XYZ,-1_1
     # converting an image to nrm_quiver destructs semantic consistency. should I avoid adding this to rule?
     # I guess not.
@@ -31,11 +32,15 @@ def to_nrm_quiver(nrm: np.ndarray,auto_func) -> "AutoData":
     sampled = np_nrm[-y.astype(int), x.astype(int)]  # (n,n,3)
     quiver = ax.quiver(x, y, sampled[:, :, 0], sampled[:, :, 1])
     ax.tick_params(length=5)
+    return plt_to_image(plt, auto_func)
+
+
+def plt_to_image(plt: matplotlib.pyplot, auto_func):
     buf = io.BytesIO()
     plt.savefig(buf, format="png")
     buf.seek(0)
     img = plt.imread(buf)
-    return auto_func("numpy,float32,HWC,RGBA,0_1",img)
+    return auto_func("numpy,float32,HWC,RGBA,0_1", img)
 
 
 def swap_channel_order(img: np.ndarray, src_idx, dst_idx):
